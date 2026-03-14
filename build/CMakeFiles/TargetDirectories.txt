@@ -1,0 +1,3 @@
+/home/icaro_s/projetos/C_Cpp/http-server/build/CMakeFiles/http-server.dir
+/home/icaro_s/projetos/C_Cpp/http-server/build/CMakeFiles/edit_cache.dir
+/home/icaro_s/projetos/C_Cpp/http-server/build/CMakeFiles/rebuild_cache.dir
