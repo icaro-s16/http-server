@@ -78,12 +78,12 @@ char* time_get_http_format(){
     char* date = calloc(date_buffer_size, sizeof(char));
     
     time_t time_now = time(NULL);
-    struct tm *timeinfo;
+    struct tm timeinfo;
     
-    timeinfo = localtime(&time_now);
+    localtime_r(&time_now, &timeinfo);
     
-    char* month = time_format_month(timeinfo);
-    char* week_day = time_format_weekday(timeinfo);
+    char* month = time_format_month(&timeinfo);
+    char* week_day = time_format_weekday(&timeinfo);
 
     while(1){
         int sn_return = snprintf(
@@ -91,12 +91,12 @@ char* time_get_http_format(){
             date_buffer_size,
             "%s, %02d %s %04d %02d:%02d:%02d GMT", 
             week_day, 
-            timeinfo->tm_mday, 
+            timeinfo.tm_mday, 
             month, 
-            timeinfo->tm_year + 1900,
-            timeinfo->tm_hour,
-            timeinfo->tm_min,
-            timeinfo->tm_sec
+            timeinfo.tm_year + 1900,
+            timeinfo.tm_hour,
+            timeinfo.tm_min,
+            timeinfo.tm_sec
         );
         if (sn_return < date_buffer_size) break;
 

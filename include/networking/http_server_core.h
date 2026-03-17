@@ -15,28 +15,38 @@
 
 #define N_THREADS 3
 
-struct Manager{
-    pthread_t thread;
-    int server_fd;
+struct ThreadMaps{
+    struct HashMap* http_mime_map;
     struct HashMap* http_request_map;
     struct HashMap* http_response_map;
-    struct Thread* workers;
 };
 
-struct Thread{
-    pthread_t thread;
+struct WorkerContent{
     int socket_client_fd;
-    struct HashMap* http_request_map;
-    struct HashMap* http_response_map;
+    struct ThreadMaps maps;
     pthread_mutex_t lock;
 };
 
+struct Worker{
+    pthread_t thread_id;
+    struct WorkerContent content;
+};
 
-struct Thread* create_threads();
+struct Manager{
+    int server_fd;
+    struct ThreadMaps maps;
+    struct Worker* workers;
+};
+
+
+
+
+
+struct Worker* create_threads();
 
 void destroy_threads(struct Manager* thread);
 
-struct Thread* tpool_acquire_worker(struct Thread* threads);
+struct Worker* tpool_acquire_worker(struct Worker* threads);
 
 
 void* http_server_worker_routine(void* thread);

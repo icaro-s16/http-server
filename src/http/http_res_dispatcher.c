@@ -1,6 +1,6 @@
 #include "http/http_res_dispatcher.h"
 
-struct Bytes* http_dispatch_request(struct HashMap* command_map, struct Packet* packet, struct Request* request){
+struct Bytes* http_dispatch_request(struct HashMap* command_map, struct HashMap* mime_map, struct Packet* packet, struct Request* request){
     struct Bytes* response = NULL; 
 
 
@@ -10,7 +10,7 @@ struct Bytes* http_dispatch_request(struct HashMap* command_map, struct Packet* 
 
     struct Pair* pair = hashmap_get(command_map, request->type);
     if(pair != NULL){
-        response = ((struct Bytes* (*) (struct Request*))pair->value)(request);
+        response = ((struct Bytes* (*) (struct Request*, struct HashMap*))pair->value)(request, mime_map);
     }
 
     return response;

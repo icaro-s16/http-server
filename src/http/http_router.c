@@ -9,7 +9,7 @@ struct HashMap* http_init_req_router(){
 };
 
 struct HashMap* http_init_res_router(){
-    struct HashMap* http_map = hashmap_create("GET", &http_handle_get_method, sizeof(struct String* (*) (struct Request*)));
+    struct HashMap* http_map = hashmap_create("GET", &http_handle_get_method, sizeof(struct Bytes* (*) (struct Request*, struct HashMap*)));
     return http_map;
 }
 

@@ -8,7 +8,6 @@ struct FileStats* fs_stat_create(char* fileName, struct HashMap* mime_map){
     stats->file_type = NULL;
 
     struct Pair* pair = NULL;
-    struct HashMap* mime_map = NULL;
 
     char* auxFileName = calloc(strlen(fileName) + 1, sizeof(char));
     strcpy(auxFileName, fileName);
