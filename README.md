@@ -3,7 +3,8 @@
 ## Descrição
 
 Este projeto consiste em uma implementação minimalista de um servidor HTTP escrito em C puro. O objetivo do projeto era me desafiar diante de um projeto complexo e com uma base teórica grande. Estou extremamente feliz com o resultado e pretendo deixar o código mais robusto com o tempo!
-Demonstração
+
+## Demonstração
 
 Aqui está o servidor em ação, compilando e respondendo a requisições:
 
