@@ -64,10 +64,10 @@ char* http_get_status(FILE* file){
     return statusCode;
 }
 
-struct Bytes* http_handle_get_method(struct Request* request){
+struct Bytes* http_handle_get_method(struct Request* request, struct HashMap* mime_map){
     FILE* file = fs_open_public_file(request->url);
     
-    struct FileStats* file_stats = fs_stat_create(request->url);
+    struct FileStats* file_stats = fs_stat_create(request->url, mime_map);
 
     struct Bytes* response = http_build_get_header(file, file_stats);
 

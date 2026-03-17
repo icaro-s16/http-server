@@ -11,7 +11,7 @@ struct FileStats{
     char* file_type;
 };
 
-struct FileStats* fs_stat_create(char* fileName);
+struct FileStats* fs_stat_create(char* fileName, struct HashMap* mime_map);
 
 size_t fs_get_file_size(FILE* file);
 

@@ -14,6 +14,6 @@ struct Bytes* http_build_get_header(FILE* file, struct FileStats* file_stats);
 
 char* http_get_status(FILE* file);
 
-struct Bytes* http_handle_get_method(struct Request* request);
+struct Bytes* http_handle_get_method(struct Request* request, struct HashMap* mime_map);
 
 #endif

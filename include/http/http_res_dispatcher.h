@@ -8,6 +8,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-struct Bytes* http_dispatch_request(struct HashMap* command_map, struct Packet* packet, struct Request* request);
+struct Bytes* http_dispatch_request(struct HashMap* command_map, struct HashMap* mime_map, struct Packet* packet, struct Request* request);
 
 #endif

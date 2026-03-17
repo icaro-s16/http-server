@@ -6,11 +6,11 @@
 
 void copy_mime(char* file_type, char* extension, char* mime);
 
-void create_text_mime(char** file_type, char* extension);
+char* create_text_mime(char* extension);
 
-void create_image_mime(char** file_type, char* extension);
+char* create_image_mime(char* extension);
 
-void create_video_mime(char** file_type, char* extension);
+char* create_video_mime(char* extension);
 
 
 #endif
