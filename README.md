@@ -7,8 +7,7 @@ Demonstração
 
 Aqui está o servidor em ação, compilando e respondendo a requisições:
 
-<video src="demo/demo.mp4" width="100%" controls="controls" muted="muted" autoplay="autoplay">
-</video>
+![Demonstração do Servidor Rodando](demo/demo.gif)
 
 ## Funcionalidades
 
