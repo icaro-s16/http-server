@@ -3,10 +3,10 @@
 
 #include <string.h>
 #include <stdlib.h>
-#include "structures/d_string.h"
+#include "structures/bytes.h"
 #include "structures/hash_map.h"
 #include "http_request_types.h"
 
-struct Request* http_parse_request(struct String* c_request, struct HashMap* hashMap);
+struct Request* http_parse_request(struct Bytes* c_request, struct HashMap* hashMap);
 
 #endif

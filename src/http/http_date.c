@@ -89,7 +89,7 @@ char* time_get_http_format(){
         int sn_return = snprintf(
             date, 
             date_buffer_size,
-            " %s, %02d %s %04d %02d:%02d:%02d GMT", 
+            "%s, %02d %s %04d %02d:%02d:%02d GMT", 
             week_day, 
             timeinfo->tm_mday, 
             month, 

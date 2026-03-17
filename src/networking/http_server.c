@@ -51,8 +51,7 @@ int http_server_accept(int socketServer){
     return accept(socketServer, NULL, NULL);
 }
 
-struct String* http_server_read_header(int fd){
-
+struct Bytes* http_server_read_header(int fd){
     size_t buffer_size = CHUNCK_SIZE;
     size_t off_set = 0;
 
@@ -60,17 +59,14 @@ struct String* http_server_read_header(int fd){
     
     while(1){
         size_t bytes = recv(fd, &buffer[off_set], (buffer_size - off_set), 0);
+        off_set += bytes;
         if (bytes == 0) break;
         if (http_is_header_complete(buffer) == 0) break;
 
-        off_set += bytes;
-
         if (bytes == buffer_size) {
             buffer_size *= 2;
-            char* auxPointer = realloc(buffer, buffer_size);
-            if( auxPointer != buffer){
-                buffer = auxPointer;
-            }
+            char* aux = realloc(buffer, buffer_size);
+            buffer = (aux != buffer) ? aux : buffer;
 
             memset(&buffer[off_set], 0, buffer_size - off_set);
 
@@ -78,20 +74,19 @@ struct String* http_server_read_header(int fd){
         
     }
 
-    struct String* string = dstr_create(buffer);
+    struct Bytes* bytes = bt_create(buffer, off_set);
     free(buffer);
 
-    return string;
+    return bytes;
 
 }
 
-void http_server_send_response(struct String* string, int fd){
-    size_t offSet = 0;
-    
-    if (string->c_str == NULL || string->size == 0) return;
-
-    while( offSet < string->size){
-        size_t sendBytes = send(fd, &string->c_str[offSet], string->size - offSet, 0);
-        offSet += sendBytes;
+void http_server_send_response(struct Bytes* bytes, int fd){
+    if (bytes->bytes == NULL || bytes->size == 0) {
+        printf("[ERROR] Response sent invalidated\n");
+        return;
     }
+    send(fd, bytes->bytes, bytes->size, 0);
+    printf("[LOG] Response sent successfully\n");
+    
 }

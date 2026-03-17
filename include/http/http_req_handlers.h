@@ -1,7 +1,7 @@
 #ifndef HTTP_REQ_HANDLERS_H
 #define HTTP_REQ_HANDLERS_H
 
-#include "structures/d_string.h"
+#include "structures/bytes.h"
 #include "http_request_types.h"
 #include <string.h>
 #include <stdlib.h>

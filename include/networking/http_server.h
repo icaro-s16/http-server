@@ -2,7 +2,7 @@
 #define HTTP_SERVER_H
 
 #include "chunck_size.h"
-#include "structures/d_string.h"
+#include "structures/bytes.h"
 #include "http/http_req_handlers.h"
 #include <netinet/in.h>
 #include <unistd.h>
@@ -23,8 +23,8 @@ int net_server_create(void* sock_addr, enum IP ip_type);
 
 int http_server_accept(int socketServer);
 
-struct String* http_server_read_header(int fd);
+struct Bytes* http_server_read_header(int fd);
 
-void http_server_send_response(struct String* string, int fd);
+void http_server_send_response(struct Bytes* string, int fd);
 
 #endif

@@ -1,8 +1,8 @@
 #include "http/http_res_builder.h"
 
-struct String* http_build_get_header(FILE* file, struct FileStats* file_stats){
+struct Bytes* http_build_get_header(FILE* file, struct FileStats* file_stats){
     
-    char* statusCode = http_get_status_string(file);
+    char* status_code = http_get_status(file);
     char* serverName = "ikrServer/1.0";
     char* date = time_get_http_format();
     size_t file_size = fs_get_file_size(file);
@@ -16,34 +16,37 @@ struct String* http_build_get_header(FILE* file, struct FileStats* file_stats){
         int sn_return = snprintf(
             buffer,
             buffer_size,
-            "%s\r\nDate: %s\r\nServer: %s\r\nContent-Type: %s; charset=UTF-8\r\nContent-Length: %lld\r\nConnection: keep-alive\r\n\r\n",
-            statusCode,
+            "%s\r\nDate: %s\r\nServer: %s\r\nContent-Type: %s\r\nContent-Length: %lld\r\nConnection: close\r\n\r\n",
+            status_code,
             date,
             serverName,
             file_stats->file_type,
             file_size
         );
 
-        if(sn_return < buffer_size) break;
-            
-        buffer_size = sn_return + 1 ;
-        char* realloc_pointer = realloc(buffer, buffer_size);
         
-        if (realloc_pointer != buffer){
-            buffer = realloc_pointer;
-        }
-
+        if(sn_return < buffer_size){
+            buffer_size = sn_return; 
+            break;
+        };
+        
+        
+        buffer_size = sn_return + 1;
+        char* aux = realloc(buffer, buffer_size);
+        buffer = (aux != buffer) ? aux : buffer;
         memset(buffer, 0, buffer_size);
     
     }
 
-    struct String* st_buffer = dstr_create(buffer);
-    free(buffer);
+    struct Bytes* bytes = bt_create(buffer, buffer_size);
+    if (buffer != NULL )free(buffer);
+    if (date != NULL) free(date);
+    if (status_code != NULL) free(status_code);
 
-    return st_buffer;
+    return bytes;
 }
 
-char* http_get_status_string(FILE* file){
+char* http_get_status(FILE* file){
     char* statusCode = NULL;
 
     if(file != NULL){
@@ -61,21 +64,21 @@ char* http_get_status_string(FILE* file){
     return statusCode;
 }
 
-struct String* http_handle_get_method(struct Request* request){
+struct Bytes* http_handle_get_method(struct Request* request){
     FILE* file = fs_open_public_file(request->url);
     
     struct FileStats* file_stats = fs_stat_create(request->url);
-    
 
-
-
-    struct String* response = http_build_get_header(file, file_stats);
+    struct Bytes* response = http_build_get_header(file, file_stats);
 
     if (file != NULL){
-        char* content = fs_read_all_content(file);
-        dstr_append(response, content);
+        unsigned char* content = fs_read_all_content(file);
+        size_t content_size = fs_get_file_size(file); 
+        bt_append(response, content, content_size);
         if (content != NULL) free(content);
-        if (content != NULL) fclose(file);
+        fclose(file);
     }
+
+    if (file_stats != NULL) fs_stat_destroy(file_stats);
     return response;
 }

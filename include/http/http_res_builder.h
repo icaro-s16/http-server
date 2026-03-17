@@ -10,10 +10,10 @@
 #include <string.h>
 #include <stdlib.h>
 
-struct String* http_build_get_header(FILE* file, struct FileStats* file_stats);
+struct Bytes* http_build_get_header(FILE* file, struct FileStats* file_stats);
 
-char* http_get_status_string(FILE* file);
+char* http_get_status(FILE* file);
 
-struct String* http_handle_get_method(struct Request* request);
+struct Bytes* http_handle_get_method(struct Request* request);
 
 #endif

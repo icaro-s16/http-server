@@ -50,6 +50,7 @@ void hashmap_insert(struct HashMap* map, char* key, void* value){
     map->size ++;
 
     struct Pair* new_pair = malloc(sizeof(struct Pair));
+    memset(new_pair, 0, sizeof(struct Pair));
     memcpy(new_pair->key, key, sizeof(char) * BUFFER_SIZE);
     new_pair->key[BUFFER_SIZE - 1] = '\0';
     new_pair->value = (void*)value;

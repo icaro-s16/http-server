@@ -1,16 +1,18 @@
 #include "http/http_req_parser.h"
 
-struct Request* http_parse_request(struct String* c_request, struct HashMap* hashMap){
+struct Request* http_parse_request(struct Bytes* uc_request, struct HashMap* hashMap){
 
     if (hashMap->sizeType != sizeof(void(*)(char*, struct Request*))) return NULL;
     
+    char* c_request = calloc(uc_request->size + 1, sizeof(char));
+    memcpy(c_request, uc_request->bytes, uc_request->size);
+
+
     char* save_pointer;
     struct Request* request = http_req_create();
 
-    char* _c_request = calloc(c_request->size + 1, sizeof(char));
-    strcpy(_c_request, c_request->c_str);
 
-    char* line = strtok_r(_c_request, "\r\n", &save_pointer);
+    char* line = strtok_r(c_request, "\r\n", &save_pointer);
     while (line != NULL){
         char* delimeter = strchr(line, ':');
         if(delimeter != NULL){
@@ -20,16 +22,16 @@ struct Request* http_parse_request(struct String* c_request, struct HashMap* has
             char* label = line;
             char* content = delimeter + 1;
             struct Pair* pair = hashmap_get(hashMap, label);
-            struct String* st_content = dstr_create(content);
+            struct Bytes* st_content = bt_create(content, strlen(content));
             if(pair != NULL){
                 ((void(*)(char*, struct Request*))pair->value)(content, request);
             }
-            dstr_destroy(st_content);
+            bt_destroy(st_content);
         }
         line = strtok_r(NULL, "\r\n", &save_pointer);
     }
 
-    free(_c_request);
+    free(c_request);
 
     if (strcmp(request->url, "/") == 0){
         char* default_file = "index.html";
