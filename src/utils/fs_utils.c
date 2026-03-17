@@ -1,28 +1,36 @@
 #include "utils/fs_utils.h"
 
-struct FileStats* fs_stat_create(char* fileName){
+struct FileStats* fs_stat_create(char* fileName, struct HashMap* mime_map){
+    if (fileName == NULL ) return NULL;
+
     struct FileStats* stats = malloc(sizeof(struct FileStats));
     stats->extension = NULL;
     stats->file_type = NULL;
 
-    char* mime_text = "text/";
-    char* mime_img = "image/";
+    struct Pair* pair = NULL;
+    struct HashMap* mime_map = NULL;
 
     char* auxFileName = calloc(strlen(fileName) + 1, sizeof(char));
     strcpy(auxFileName, fileName);
 
     char* delimeter = strchr(auxFileName, '.');
-    unsigned char* extension = NULL;
+    char* extension = NULL;
 
     if (delimeter != NULL) delimeter[0] = '\0';
-    if (delimeter != NULL) extension = delimeter + 1;
+    if (delimeter != NULL) {
 
-    struct HashMap* mime_map = http_init_mime_router();
+        extension = delimeter + 1;
 
-    struct Pair* pair = hashmap_get(mime_map, extension);
+        stats->extension = calloc(strlen(extension) + 1, sizeof(char));
+        strcpy(stats->extension, extension);
+        
+        mime_map = http_init_mime_router();
+        pair = hashmap_get(mime_map, extension);
+    }
+
     if(pair != NULL){
         
-        ((void(*)(char**, char*))pair->value)(&stats->extension, extension);
+        stats->file_type = ((char*(*)(char*))pair->value)(extension);
 
     }else{
         char* undef_type = "application/octet-stream";
@@ -33,12 +41,10 @@ struct FileStats* fs_stat_create(char* fileName){
         return stats;
 
     }
-    stats->extension = calloc(strlen(extension) + 1, sizeof(char));
-    strcpy(stats->extension, extension);
-    
+
+
     if(auxFileName != NULL) free(auxFileName);
-    
-    hashmap_destroy(mime_map);
+    if(mime_map != NULL) hashmap_destroy(mime_map);
     return stats;
 }
 

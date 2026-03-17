@@ -1,6 +1,7 @@
 #include "structures/hash_map.h"
 
 size_t hashmap_calc_hash(char* msg){
+    if (msg == NULL) return 0;
     size_t hash = 0;
 
     for (int i = 0; i < strlen(msg); i++) {
